@@ -15,16 +15,6 @@ public class Test : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(clip.length
-
-
-
-
-
-
-
-
-            ); // maybe 0
         foreach (var ce in clip.events)
         {
             Debug.Log(ce.time);

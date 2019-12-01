@@ -31,5 +31,10 @@ namespace AsepriteAnimator
             this.from = from;
             this.to = to;
         }
+
+        public override string ToString()
+        {
+            return $"name : {Name}, From : {From}, To : {To}";
+        }
     }
 }

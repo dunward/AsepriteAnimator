@@ -41,6 +41,7 @@ namespace AsepriteAnimator
 
                 #region AsepriteData Generator
                 List<AsepriteData> test = new List<AsepriteData>();
+                List<AsepriteClipData> clipList = new List<AsepriteClipData>();
 
                 foreach (var t in token["frames"])
                 {
@@ -54,10 +55,25 @@ namespace AsepriteAnimator
                                               int.Parse(t.Last["duration"].ToString())));
                 }
 
+                foreach (var t in token["meta"]["frameTags"])
+                {
+                    clipList.Add(new AsepriteClipData(
+                        t["name"].ToString(),
+                        int.Parse(t["from"].ToString()),
+                        int.Parse(t["to"].ToString())
+                        ));
+                }
+
                 foreach (var t in test)
                 {
                     Debug.Log(t);
                 }
+
+                foreach (var t in clipList)
+                {
+                    Debug.Log(t);
+                }
+
                 #endregion
                 #region Sprite Split
                 TextureImporter ti = TextureImporter.GetAtPath(AssetDatabase.GetAssetPath(spriteSheet)) as TextureImporter;
@@ -102,33 +118,44 @@ namespace AsepriteAnimator
                 // 3. insert clip to animator           //
                 // 4. save clip / animator binary files //
                 //////////////////////////////////////////
+                
+                // change -> first. parse json about frame info
 
                 Animator animator = new Animator();
 
-                AnimationClip clip = new AnimationClip();
-                // clip.SampleAnimation(sprites[0], 0);
-
-                EditorCurveBinding spriteBinding = new EditorCurveBinding();
-                spriteBinding.type = typeof(SpriteRenderer);
-                spriteBinding.path = "";
-                spriteBinding.propertyName = "m_Sprite";
-
-                ObjectReferenceKeyframe[] spriteKeyFrames = new ObjectReferenceKeyframe[sprites.Length];
-
-                float totalDuration = 0;
-
-                for (int i = 0; i < sprites.Length; i++)
+                foreach (var clip in clipList)
                 {
-                    spriteKeyFrames[i] = new ObjectReferenceKeyframe();
-                    spriteKeyFrames[i].time = totalDuration;
-                    totalDuration += test[i].Duration / 1000f; // millie seconds change
-                    spriteKeyFrames[i].value = sprites[i];
+                    AnimationClip c = new AnimationClip();
+                    EditorCurveBinding spriteBinding = new EditorCurveBinding();
+                    spriteBinding.type = typeof(SpriteRenderer);
+                    spriteBinding.path = "";
+                    spriteBinding.propertyName = "m_Sprite";
+
+                    int length = clip.To - clip.From - 1;
+
+                    ObjectReferenceKeyframe[] spriteKeyFrames = new ObjectReferenceKeyframe[length];
+
+                    float totalDuration = 0;
+
+                    for (int i = clip.From; i < spriteKeyFrames.Length + clip.From; i++)
+                    {
+                        Debug.Log(clip.From + ","+ spriteKeyFrames.Length);
+                        spriteKeyFrames[i - clip.From] = new ObjectReferenceKeyframe();
+                        spriteKeyFrames[i - clip.From].time = totalDuration;
+                        totalDuration += test[i].Duration / 1000f; // millie seconds change
+                        spriteKeyFrames[i - clip.From].value = sprites[i];
+                        Debug.Log($"{clip.Name} : {sprites[i].name}");
+                    }
+
+                    AnimationUtility.SetObjectReferenceCurve(c, spriteBinding, spriteKeyFrames);
+                    AssetDatabase.CreateAsset(c, $"Assets/{clip.Name}.anim");
+                    Console.WriteLine("!");
                 }
 
-                AnimationUtility.SetObjectReferenceCurve(clip, spriteBinding, spriteKeyFrames);
+
+
                 // clip.SetCurve(AssetDatabase.GetAssetPath(sprites[0]), typeof(SpriteRenderer), sprites[0].name, null);
 
-                AssetDatabase.CreateAsset(clip, "Assets/test.anim");
             }
         }
     }
