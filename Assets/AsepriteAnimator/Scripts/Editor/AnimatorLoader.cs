@@ -16,6 +16,7 @@ namespace AsepriteAnimator
         private static AnimatorLoader windowInstance = null;
         private Texture spriteSheet;
         private TextAsset sheetJson;
+        private string fileName;
 
         [MenuItem("Aseprite/Load Animation")]
         private static void Open()
@@ -31,6 +32,7 @@ namespace AsepriteAnimator
 
         private void OnGUI()
         {
+            fileName = EditorGUILayout.TextField("File Name", fileName);
             spriteSheet = (Texture)EditorGUILayout.ObjectField("Sprite Sheet", spriteSheet, typeof(Texture), false);
             sheetJson = (TextAsset)EditorGUILayout.ObjectField("Sheet Json", sheetJson, typeof(TextAsset), false);
 
@@ -102,7 +104,6 @@ namespace AsepriteAnimator
                 ti.SaveAndReimport();
                 #endregion
 
-                // Sprite[] sprites = ;
                 Sprite[] sprites = AssetDatabase.LoadAllAssetRepresentationsAtPath(ti.assetPath).Select(x => x as Sprite).Where(x => x != null).ToArray();
 
                 foreach (var sprite in sprites)
@@ -110,19 +111,7 @@ namespace AsepriteAnimator
                     Debug.Log(sprite.name);
                 }
 
-                // AsepriteData <- Need more
-                // [meta/frameTags] <- frame data
-
-                //////////////////////////////////////////
-                // 1. load sprite[]                     // 88 line
-                // 2. insert sprite, duration to clip   //
-                // 3. insert clip to animator           //
-                // 4. save clip / animator binary files //
-                //////////////////////////////////////////
-                
-                // change -> first. parse json about frame info
-
-                AnimatorController animator = AnimatorController.CreateAnimatorControllerAtPath("Assets/animator.controller");
+                AnimatorController animator = AnimatorController.CreateAnimatorControllerAtPath($"Assets/{fileName}.controller");
 
                 foreach (var clip in clipList)
                 {
@@ -150,13 +139,8 @@ namespace AsepriteAnimator
 
                     AnimationUtility.SetObjectReferenceCurve(c, spriteBinding, spriteKeyFrames);
                     AssetDatabase.CreateAsset(c, $"Assets/{clip.Name}.anim");
-                    //animator.AddLayer(new AnimatorControllerLayer());
                     animator.AddMotion(c, q);
-                    //q++;
                 }
-
-                // AssetDatabase.CreateAsset(animator, $"Assets/animator.controller");
-                // clip.SetCurve(AssetDatabase.GetAssetPath(sprites[0]), typeof(SpriteRenderer), sprites[0].name, null);
             }
         }
     }
