@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro.SpriteAssetUtilities;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEditor.VersionControl;
 using UnityEngine;
 
@@ -121,7 +122,7 @@ namespace AsepriteAnimator
                 
                 // change -> first. parse json about frame info
 
-                Animator animator = new Animator();
+                AnimatorController animator = AnimatorController.CreateAnimatorControllerAtPath("Assets/animator.controller");
 
                 foreach (var clip in clipList)
                 {
@@ -149,13 +150,13 @@ namespace AsepriteAnimator
 
                     AnimationUtility.SetObjectReferenceCurve(c, spriteBinding, spriteKeyFrames);
                     AssetDatabase.CreateAsset(c, $"Assets/{clip.Name}.anim");
-                    Console.WriteLine("!");
+                    //animator.AddLayer(new AnimatorControllerLayer());
+                    animator.AddMotion(c, q);
+                    //q++;
                 }
 
-
-
+                // AssetDatabase.CreateAsset(animator, $"Assets/animator.controller");
                 // clip.SetCurve(AssetDatabase.GetAssetPath(sprites[0]), typeof(SpriteRenderer), sprites[0].name, null);
-
             }
         }
     }
