@@ -7,12 +7,24 @@ namespace AsepriteAnimator
 {
     public class AsepriteData
     {
+        private string name;
+
         private int x;
         private int y;
         private int w;
         private int h;
 
-        private string name;
+        private int duration;
+
+        public string Name
+        {
+            get => name;
+        }
+
+        public int Duration
+        {
+            get => duration;
+        }
 
         public Vector2 GetPosition()
         {
@@ -24,17 +36,19 @@ namespace AsepriteAnimator
             return new Vector2(w, h);
         }
 
-        public AsepriteData(int x, int y, int w, int h)
+        public AsepriteData(string name, int x, int y, int w, int h, int duration)
         {
+            this.name = name;
             this.x = x;
             this.y = y;
             this.w = w;
             this.h = h;
+            this.duration = duration;
         }
 
         public override string ToString()
         {
-            return $"x : {x}, y : {y}, w : {w}, h : {h}";
+            return $"name : {name}, x : {x}, y : {y}, w : {w}, h : {h}, duration(ms) {duration}";
         }
     }
 }

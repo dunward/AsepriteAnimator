@@ -44,6 +44,42 @@ TextureImporter:
   - first:
       213: -9196487274944184406
     second: 11 sprite.png
+  - first:
+      213: -3434924109734237902
+    second: Sprite-0001 0.
+  - first:
+      213: -4202169212346560690
+    second: Sprite-0001 1.
+  - first:
+      213: -7853236075725565508
+    second: Sprite-0001 2.
+  - first:
+      213: 6218893599985929511
+    second: Sprite-0001 3.
+  - first:
+      213: -7409560065655145434
+    second: Sprite-0001 4.
+  - first:
+      213: -4646089209602791269
+    second: Sprite-0001 5.
+  - first:
+      213: -1395504978463882423
+    second: Sprite-0001 6.
+  - first:
+      213: -7010799595242757620
+    second: Sprite-0001 7.
+  - first:
+      213: 863008876182380021
+    second: Sprite-0001 8.
+  - first:
+      213: -1443742445467076175
+    second: Sprite-0001 9.
+  - first:
+      213: -923853049515096583
+    second: Sprite-0001 10.
+  - first:
+      213: 1398176629410586322
+    second: Sprite-0001 11.
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -128,7 +164,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 0 sprite.png
+      name: Sprite-0001 0.
       rect:
         serializedVersion: 2
         x: 0
@@ -143,13 +179,13 @@ TextureImporter:
       tessellationDetail: -1
       bones: []
       spriteID: 
-      internalID: 1637084689733838628
+      internalID: -3434924109734237902
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 1 sprite.png
+      name: Sprite-0001 1.
       rect:
         serializedVersion: 2
         x: 32
@@ -164,13 +200,13 @@ TextureImporter:
       tessellationDetail: -1
       bones: []
       spriteID: 
-      internalID: 2690469664131655138
+      internalID: -4202169212346560690
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 2 sprite.png
+      name: Sprite-0001 2.
       rect:
         serializedVersion: 2
         x: 64
@@ -185,13 +221,13 @@ TextureImporter:
       tessellationDetail: -1
       bones: []
       spriteID: 
-      internalID: -5323611267993005611
+      internalID: -7853236075725565508
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 3 sprite.png
+      name: Sprite-0001 3.
       rect:
         serializedVersion: 2
         x: 96
@@ -206,13 +242,13 @@ TextureImporter:
       tessellationDetail: -1
       bones: []
       spriteID: 
-      internalID: -6300202204252874734
+      internalID: 6218893599985929511
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 4 sprite.png
+      name: Sprite-0001 4.
       rect:
         serializedVersion: 2
         x: 128
@@ -227,13 +263,13 @@ TextureImporter:
       tessellationDetail: -1
       bones: []
       spriteID: 
-      internalID: -2889078386365071760
+      internalID: -7409560065655145434
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 5 sprite.png
+      name: Sprite-0001 5.
       rect:
         serializedVersion: 2
         x: 160
@@ -248,13 +284,13 @@ TextureImporter:
       tessellationDetail: -1
       bones: []
       spriteID: 
-      internalID: 7202320821736077522
+      internalID: -4646089209602791269
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 6 sprite.png
+      name: Sprite-0001 6.
       rect:
         serializedVersion: 2
         x: 192
@@ -269,13 +305,13 @@ TextureImporter:
       tessellationDetail: -1
       bones: []
       spriteID: 
-      internalID: -5963248717535154095
+      internalID: -1395504978463882423
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 7 sprite.png
+      name: Sprite-0001 7.
       rect:
         serializedVersion: 2
         x: 224
@@ -290,13 +326,13 @@ TextureImporter:
       tessellationDetail: -1
       bones: []
       spriteID: 
-      internalID: 5064852550019922377
+      internalID: -7010799595242757620
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 8 sprite.png
+      name: Sprite-0001 8.
       rect:
         serializedVersion: 2
         x: 256
@@ -311,13 +347,13 @@ TextureImporter:
       tessellationDetail: -1
       bones: []
       spriteID: 
-      internalID: 7644732661638649236
+      internalID: 863008876182380021
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 9 sprite.png
+      name: Sprite-0001 9.
       rect:
         serializedVersion: 2
         x: 288
@@ -332,13 +368,13 @@ TextureImporter:
       tessellationDetail: -1
       bones: []
       spriteID: 
-      internalID: -8212753987939581955
+      internalID: -1443742445467076175
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 10 sprite.png
+      name: Sprite-0001 10.
       rect:
         serializedVersion: 2
         x: 320
@@ -353,13 +389,13 @@ TextureImporter:
       tessellationDetail: -1
       bones: []
       spriteID: 
-      internalID: -3629818138418222815
+      internalID: -923853049515096583
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 11 sprite.png
+      name: Sprite-0001 11.
       rect:
         serializedVersion: 2
         x: 352
@@ -374,7 +410,7 @@ TextureImporter:
       tessellationDetail: -1
       bones: []
       spriteID: 
-      internalID: -9196487274944184406
+      internalID: 1398176629410586322
       vertices: []
       indices: 
       edges: []

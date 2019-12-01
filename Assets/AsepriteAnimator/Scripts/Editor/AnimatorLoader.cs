@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro.SpriteAssetUtilities;
 using UnityEditor;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace AsepriteAnimator
@@ -38,16 +39,27 @@ namespace AsepriteAnimator
 
                 int q = 0;
 
+                #region AsepriteData Generator
                 List<AsepriteData> test = new List<AsepriteData>();
 
                 foreach (var t in token["frames"])
                 {
-                    test.Add(new AsepriteData(int.Parse(t.Last["frame"]["x"].ToString()),
+                    string name = t.Path.Split('\'')[1];
+
+                    test.Add(new AsepriteData(name,
+                                              int.Parse(t.Last["frame"]["x"].ToString()),
                                               int.Parse(t.Last["frame"]["y"].ToString()),
                                               int.Parse(t.Last["frame"]["w"].ToString()),
-                                              int.Parse(t.Last["frame"]["h"].ToString())));
+                                              int.Parse(t.Last["frame"]["h"].ToString()),
+                                              int.Parse(t.Last["duration"].ToString())));
                 }
 
+                foreach (var t in test)
+                {
+                    Debug.Log(t);
+                }
+                #endregion
+                #region Sprite Split
                 TextureImporter ti = TextureImporter.GetAtPath(AssetDatabase.GetAssetPath(spriteSheet)) as TextureImporter;
                 ti.spriteImportMode = SpriteImportMode.Multiple;
 
@@ -61,7 +73,7 @@ namespace AsepriteAnimator
                     {
                         border = Vector4.zero,
                         rect = new Rect(t.GetPosition(), t.GetSize()),
-                        name = $"{oko} sprite.png",
+                        name = t.Name,
                         alignment = 0
                     });
 
@@ -71,6 +83,52 @@ namespace AsepriteAnimator
                 ti.isReadable = true;
                 ti.spritesheet = meta.ToArray();
                 ti.SaveAndReimport();
+                #endregion
+
+                // Sprite[] sprites = ;
+                Sprite[] sprites = AssetDatabase.LoadAllAssetRepresentationsAtPath(ti.assetPath).Select(x => x as Sprite).Where(x => x != null).ToArray();
+
+                foreach (var sprite in sprites)
+                {
+                    Debug.Log(sprite.name);
+                }
+
+                // AsepriteData <- Need more
+                // [meta/frameTags] <- frame data
+
+                //////////////////////////////////////////
+                // 1. load sprite[]                     // 88 line
+                // 2. insert sprite, duration to clip   //
+                // 3. insert clip to animator           //
+                // 4. save clip / animator binary files //
+                //////////////////////////////////////////
+
+                Animator animator = new Animator();
+
+                AnimationClip clip = new AnimationClip();
+                // clip.SampleAnimation(sprites[0], 0);
+
+                EditorCurveBinding spriteBinding = new EditorCurveBinding();
+                spriteBinding.type = typeof(SpriteRenderer);
+                spriteBinding.path = "";
+                spriteBinding.propertyName = "m_Sprite";
+
+                ObjectReferenceKeyframe[] spriteKeyFrames = new ObjectReferenceKeyframe[sprites.Length];
+
+                float totalDuration = 0;
+
+                for (int i = 0; i < sprites.Length; i++)
+                {
+                    spriteKeyFrames[i] = new ObjectReferenceKeyframe();
+                    spriteKeyFrames[i].time = totalDuration;
+                    totalDuration += test[i].Duration / 1000f; // millie seconds change
+                    spriteKeyFrames[i].value = sprites[i];
+                }
+
+                AnimationUtility.SetObjectReferenceCurve(clip, spriteBinding, spriteKeyFrames);
+                // clip.SetCurve(AssetDatabase.GetAssetPath(sprites[0]), typeof(SpriteRenderer), sprites[0].name, null);
+
+                AssetDatabase.CreateAsset(clip, "Assets/test.anim");
             }
         }
     }
