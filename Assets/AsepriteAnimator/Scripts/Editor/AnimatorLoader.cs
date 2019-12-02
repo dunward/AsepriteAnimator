@@ -36,8 +36,8 @@ namespace AsepriteAnimator
         private void OnGUI()
         {
             EditorGUILayout.BeginVertical();
-            #region Logo
             GUILayout.FlexibleSpace();
+            #region Logo
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             EditorGUILayout.LabelField("", Styler.Skin.GetStyle("aseprite logo"), GUILayout.Width(130), GUILayout.Height(130));
@@ -80,9 +80,9 @@ namespace AsepriteAnimator
             #endregion
             GUILayout.Space(15);
 
+            #region Generator
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-
             if (GUILayout.Button("Generator", Styler.Skin.GetStyle("button"), GUILayout.Width(200), GUILayout.Height(30)))
             {
                 JToken token = JObject.Parse(sheetJson.text);
@@ -91,23 +91,14 @@ namespace AsepriteAnimator
                 var clips = GetAsepriteClipData(token["meta"]["frameTags"]);
 
                 #region Sprite Split
-                TextureImporter ti = TextureImporter.GetAtPath(AssetDatabase.GetAssetPath(spriteSheet)) as TextureImporter;
+                TextureImporter ti = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(spriteSheet)) as TextureImporter;
                 ti.spriteImportMode = SpriteImportMode.Multiple;
 
-                List<SpriteMetaData> meta = new List<SpriteMetaData>();
-
-
-
-                foreach (var t in aseprites)
+                var meta = aseprites.Select(aseprite => new SpriteMetaData()
                 {
-                    meta.Add(new SpriteMetaData()
-                    {
-                        border = Vector4.zero,
-                        rect = new Rect(t.GetPosition(), t.GetSize()),
-                        name = t.Name,
-                        alignment = 0
-                    });
-                }
+                    border = Vector4.zero, rect = new Rect(aseprite.GetPosition(), aseprite.GetSize()),
+                    name = aseprite.Name, alignment = (int) alignment
+                }).ToList();
 
                 ti.isReadable = true;
                 ti.spritesheet = meta.ToArray();
@@ -154,6 +145,7 @@ namespace AsepriteAnimator
             }
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
+            #endregion
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndVertical();
         }
