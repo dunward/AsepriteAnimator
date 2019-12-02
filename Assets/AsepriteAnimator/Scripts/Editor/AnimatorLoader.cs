@@ -1,12 +1,8 @@
-﻿using System;
-using Newtonsoft.Json.Linq;
-using System.Collections;
+﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro.SpriteAssetUtilities;
 using UnityEditor;
 using UnityEditor.Animations;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace AsepriteAnimator
@@ -17,8 +13,11 @@ namespace AsepriteAnimator
         private Texture spriteSheet;
         private TextAsset sheetJson;
 
+        private AsepriteAlignment alignment;
+
         private string fileName;
         private string filePath;
+
 
         [MenuItem("Aseprite/Import Animation")]
         private static void Open()
@@ -27,8 +26,8 @@ namespace AsepriteAnimator
             {
                 windowInstance = CreateInstance<AnimatorLoader>();
                 windowInstance.titleContent.text = "Aseprite Importer";
-                windowInstance.minSize = new Vector2(500, 300);
-                GUI.skin = Resources.Load<GUISkin>("AsepriteAnimator");
+                windowInstance.minSize = new Vector2(300, 400);
+                windowInstance.maxSize = new Vector2(300, 400);
             }
 
             windowInstance.Show();
@@ -36,9 +35,55 @@ namespace AsepriteAnimator
 
         private void OnGUI()
         {
-            DisplayGUI();
+            EditorGUILayout.BeginVertical();
+            #region Logo
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.LabelField("", Styler.Skin.GetStyle("aseprite logo"), GUILayout.Width(130), GUILayout.Height(130));
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+            #endregion
+            GUILayout.Space(15);
+            #region File Name
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.LabelField("File Name", GUILayout.Width(58));
+            fileName = EditorGUILayout.TextField(fileName, GUILayout.Width(122));
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+            #endregion
+            #region Sprite Sheet
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.LabelField("Sprite Sheet", GUILayout.Width(72));
+            // spriteSheet = Styler.DrawProObjectField<Texture>(null, (SerializedProperty)spriteSheet, typeof(Texture), Styler.Skin.GetStyle("button"), false);
+            spriteSheet = (Texture)EditorGUILayout.ObjectField(spriteSheet, typeof(Texture), false, GUILayout.Width(108));
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+            #endregion
+            #region Json File
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.LabelField("Json File", GUILayout.Width(72));
+            sheetJson = (TextAsset)EditorGUILayout.ObjectField(sheetJson, typeof(TextAsset), false, GUILayout.Width(108));
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+            #endregion
+            #region Alignment
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.LabelField("Alignment", GUILayout.Width(72));
+            alignment = (AsepriteAlignment)EditorGUILayout.EnumPopup(alignment, GUILayout.Width(108));
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+            #endregion
+            GUILayout.Space(15);
 
-            if (GUILayout.Button("Generator"))
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+
+            if (GUILayout.Button("Generator", Styler.Skin.GetStyle("button"), GUILayout.Width(200), GUILayout.Height(30)))
             {
                 JToken token = JObject.Parse(sheetJson.text);
 
@@ -94,7 +139,7 @@ namespace AsepriteAnimator
 
                     for (int i = clip.From; i < spriteKeyFrames.Length + clip.From; i++)
                     {
-                        Debug.Log(clip.From + ","+ spriteKeyFrames.Length);
+                        Debug.Log(clip.From + "," + spriteKeyFrames.Length);
                         spriteKeyFrames[i - clip.From] = new ObjectReferenceKeyframe();
                         spriteKeyFrames[i - clip.From].time = totalDuration;
                         totalDuration += aseprites[i].Duration / 1000f; // millie seconds change
@@ -107,22 +152,10 @@ namespace AsepriteAnimator
                     animator.AddMotion(c);
                 }
             }
-        }
-
-        private void DisplayGUI()
-        {
-            EditorGUILayout.BeginHorizontal();
-            fileName = EditorGUILayout.TextField("File Name", fileName);
-            if (GUILayout.Button("path", GUILayout.Width(40)))
-            {
-                filePath = EditorUtility.OpenFolderPanel("Animation Save Folder", "", ""); 
-            }
+            GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PrefixLabel("Sprite Sheet");
-            spriteSheet = (Texture)EditorGUILayout.ObjectField(spriteSheet, typeof(Texture), false);
-            EditorGUILayout.EndHorizontal();
-            sheetJson = (TextAsset)EditorGUILayout.ObjectField("Animation Json", sheetJson, typeof(TextAsset), false);
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndVertical();
         }
 
         private List<AsepriteData> GetAsepriteData(JToken token)
@@ -141,5 +174,7 @@ namespace AsepriteAnimator
                 int.Parse(data["from"].ToString()),
                 int.Parse(data["to"].ToString()))).ToList();
         }
+
+
     }
 }
