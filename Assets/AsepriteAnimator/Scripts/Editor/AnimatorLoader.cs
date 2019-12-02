@@ -16,15 +16,19 @@ namespace AsepriteAnimator
         private static AnimatorLoader windowInstance = null;
         private Texture spriteSheet;
         private TextAsset sheetJson;
-        private string fileName;
 
-        [MenuItem("Aseprite/Load Animation")]
+        private string fileName;
+        private string filePath;
+
+        [MenuItem("Aseprite/Import Animation")]
         private static void Open()
         {
             if(windowInstance == null)
             {
                 windowInstance = CreateInstance<AnimatorLoader>();
+                windowInstance.titleContent.text = "Aseprite Importer";
                 windowInstance.minSize = new Vector2(500, 300);
+                GUI.skin = Resources.Load<GUISkin>("AsepriteAnimator");
             }
 
             windowInstance.Show();
@@ -32,61 +36,24 @@ namespace AsepriteAnimator
 
         private void OnGUI()
         {
-            fileName = EditorGUILayout.TextField("File Name", fileName);
-            spriteSheet = (Texture)EditorGUILayout.ObjectField("Sprite Sheet", spriteSheet, typeof(Texture), false);
-            sheetJson = (TextAsset)EditorGUILayout.ObjectField("Sheet Json", sheetJson, typeof(TextAsset), false);
+            DisplayGUI();
 
             if (GUILayout.Button("Generator"))
             {
                 JToken token = JObject.Parse(sheetJson.text);
 
-                int q = 0;
+                var aseprites = GetAsepriteData(token["frames"]);
+                var clips = GetAsepriteClipData(token["meta"]["frameTags"]);
 
-                #region AsepriteData Generator
-                List<AsepriteData> test = new List<AsepriteData>();
-                List<AsepriteClipData> clipList = new List<AsepriteClipData>();
-
-                foreach (var t in token["frames"])
-                {
-                    string name = t.Path.Split('\'')[1];
-
-                    test.Add(new AsepriteData(name,
-                                              int.Parse(t.Last["frame"]["x"].ToString()),
-                                              int.Parse(t.Last["frame"]["y"].ToString()),
-                                              int.Parse(t.Last["frame"]["w"].ToString()),
-                                              int.Parse(t.Last["frame"]["h"].ToString()),
-                                              int.Parse(t.Last["duration"].ToString())));
-                }
-
-                foreach (var t in token["meta"]["frameTags"])
-                {
-                    clipList.Add(new AsepriteClipData(
-                        t["name"].ToString(),
-                        int.Parse(t["from"].ToString()),
-                        int.Parse(t["to"].ToString())
-                        ));
-                }
-
-                foreach (var t in test)
-                {
-                    Debug.Log(t);
-                }
-
-                foreach (var t in clipList)
-                {
-                    Debug.Log(t);
-                }
-
-                #endregion
                 #region Sprite Split
                 TextureImporter ti = TextureImporter.GetAtPath(AssetDatabase.GetAssetPath(spriteSheet)) as TextureImporter;
                 ti.spriteImportMode = SpriteImportMode.Multiple;
 
                 List<SpriteMetaData> meta = new List<SpriteMetaData>();
 
-                int oko = 0;
 
-                foreach (var t in test)
+
+                foreach (var t in aseprites)
                 {
                     meta.Add(new SpriteMetaData()
                     {
@@ -95,8 +62,6 @@ namespace AsepriteAnimator
                         name = t.Name,
                         alignment = 0
                     });
-
-                    oko++;
                 }
 
                 ti.isReadable = true;
@@ -113,7 +78,7 @@ namespace AsepriteAnimator
 
                 AnimatorController animator = AnimatorController.CreateAnimatorControllerAtPath($"Assets/{fileName}.controller");
 
-                foreach (var clip in clipList)
+                foreach (var clip in clips)
                 {
                     AnimationClip c = new AnimationClip();
                     EditorCurveBinding spriteBinding = new EditorCurveBinding();
@@ -132,16 +97,49 @@ namespace AsepriteAnimator
                         Debug.Log(clip.From + ","+ spriteKeyFrames.Length);
                         spriteKeyFrames[i - clip.From] = new ObjectReferenceKeyframe();
                         spriteKeyFrames[i - clip.From].time = totalDuration;
-                        totalDuration += test[i].Duration / 1000f; // millie seconds change
+                        totalDuration += aseprites[i].Duration / 1000f; // millie seconds change
                         spriteKeyFrames[i - clip.From].value = sprites[i];
                         Debug.Log($"{clip.Name} : {sprites[i].name}");
                     }
 
                     AnimationUtility.SetObjectReferenceCurve(c, spriteBinding, spriteKeyFrames);
                     AssetDatabase.CreateAsset(c, $"Assets/{clip.Name}.anim");
-                    animator.AddMotion(c, q);
+                    animator.AddMotion(c);
                 }
             }
+        }
+
+        private void DisplayGUI()
+        {
+            EditorGUILayout.BeginHorizontal();
+            fileName = EditorGUILayout.TextField("File Name", fileName);
+            if (GUILayout.Button("path", GUILayout.Width(40)))
+            {
+                filePath = EditorUtility.OpenFolderPanel("Animation Save Folder", "", ""); 
+            }
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel("Sprite Sheet");
+            spriteSheet = (Texture)EditorGUILayout.ObjectField(spriteSheet, typeof(Texture), false);
+            EditorGUILayout.EndHorizontal();
+            sheetJson = (TextAsset)EditorGUILayout.ObjectField("Animation Json", sheetJson, typeof(TextAsset), false);
+        }
+
+        private List<AsepriteData> GetAsepriteData(JToken token)
+        {
+            return token.ToObject<JObject>().Properties().Select(property => new AsepriteData(property.Name,
+                int.Parse(property.Value["frame"]["x"].ToString()),
+                int.Parse(property.Value["frame"]["y"].ToString()),
+                int.Parse(property.Value["frame"]["w"].ToString()),
+                int.Parse(property.Value["frame"]["h"].ToString()),
+                int.Parse(property.Value["duration"].ToString()))).ToList();
+        }
+
+        private List<AsepriteClipData> GetAsepriteClipData(JToken token)
+        {
+            return token.Select(data => new AsepriteClipData(data["name"].ToString(),
+                int.Parse(data["from"].ToString()),
+                int.Parse(data["to"].ToString()))).ToList();
         }
     }
 }
