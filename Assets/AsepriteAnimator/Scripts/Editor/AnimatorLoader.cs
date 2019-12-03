@@ -79,12 +79,12 @@ namespace AsepriteAnimator
             EditorGUILayout.EndHorizontal();
             #endregion
             GUILayout.Space(15);
-            #region Generator
+            #region Generate
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Generator", Styler.Skin.GetStyle("button"), GUILayout.Width(200), GUILayout.Height(30)))
+            if (GUILayout.Button("", Styler.Skin.GetStyle("button"), GUILayout.Width(200), GUILayout.Height(30)))
             {
-                if(fileName.Equals(string.Empty) || spriteSheet == null || sheetJson == null)
+                if(fileName == null || fileName.Equals(string.Empty) || spriteSheet == null || sheetJson == null)
                 {
                     Debug.Log("Need to fill the fields");
                     return;
