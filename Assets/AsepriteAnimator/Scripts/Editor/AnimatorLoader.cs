@@ -125,6 +125,7 @@ namespace AsepriteAnimator
         private Sprite[] GetSplitSprites(List<AsepriteData> aseprites)
         {
             TextureImporter importer = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(spriteSheet)) as TextureImporter;
+            importer.textureType = TextureImporterType.Sprite;
             importer.spriteImportMode = SpriteImportMode.Multiple;
 
             var meta = aseprites.Select(aseprite => new SpriteMetaData()
