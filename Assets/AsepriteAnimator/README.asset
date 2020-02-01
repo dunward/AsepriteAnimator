@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b22a90dbf475e24d8180c25cf3a7ab5, type: 3}
+  m_Name: README
+  m_EditorClassIdentifier: 
+  icon: {fileID: 2800000, guid: 97e6e20ec435bb84cba2e72299c31ab4, type: 3}
+  title: 
+  sections:
+  - heading: AsepriteAnimator
+    text: Aseprite Animator is split sprite, and create animations from aseprite
+      save files. You don't need to waste your time on boring task.
+    linkText: Github
+    url: https://github.com/weisswolfi/AsepriteAnimator
+  loadedLayout: 1
