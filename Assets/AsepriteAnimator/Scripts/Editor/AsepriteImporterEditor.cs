@@ -1,11 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Experimental.AssetImporters;
+ 
 using UnityEngine;
 
 [CustomEditor(typeof(AsepriteImporter))]
-public class AsepriteImporterEditor : ScriptedImporterEditor
+public class AsepriteImporterEditor : UnityEditor.AssetImporters.ScriptedImporterEditor
 {
     public override void OnInspectorGUI()
     {
