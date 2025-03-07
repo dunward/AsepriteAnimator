@@ -1,4 +1,10 @@
-<p align="center"><img src="https://img.shields.io/github/workflow/status/weisswolfi/AsepriteAnimator/Build?logo=github&style=flat-square"> <img src ="https://img.shields.io/github/v/release/weisswolfi/asepriteanimator?style=flat-square&logo=github"/> <img src ="https://img.shields.io/github/downloads/weisswolfi/asepriteanimator/total?style=flat-square&color=brightgreen&logo=github"/> </p>
+# ARCHIVED
+Now unity is support Aseprite officially. 
+https://docs.unity3d.com/Packages/com.unity.2d.aseprite@1.0/manual/index.html
+
+---
+
+<img src ="https://img.shields.io/github/v/release/dunward/asepriteanimator?style=flat-square&logo=github"/> <img src ="https://img.shields.io/github/downloads/dunward/asepriteanimator/total?style=flat-square&color=brightgreen&logo=github"/> </p>
 
 # AsepriteAnimator
 ![main image](Images/logo.png)
